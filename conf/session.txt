@@ -1,0 +1,1 @@
+{"driverString":"com.mysql.cj.jdbc.Driver","header":"jdbc:mysql://","serverAddress":"localhost","portNumber":3306,"database":"orm","properties":"","username":"ormuser","password":"gupta"}

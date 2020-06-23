@@ -1,0 +1,1 @@
+{"dbmsType":"MySQL","header":"jdbc:mysql//","serverAddress":"localhost","portNumber":3306,"database":"shivamdb","properties":"","username":"shyam","password":"gupta"}
