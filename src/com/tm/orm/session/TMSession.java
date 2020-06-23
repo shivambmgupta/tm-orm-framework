@@ -16,7 +16,7 @@ import com.tm.orm.util.*;
 
 public class TMSession {
 
-	private String dbmsType;
+	private String driverString;
 
 	private String header;
 	private String serverAddress;
@@ -27,14 +27,13 @@ public class TMSession {
 	private String username;
 	private String password;
 	
-	static {
-		TMDataHouse.configureHeaders();
+	{
+		this.driverString = "com.mysql.cj.jdbc.Driver";
+		this.header = "jdbc:mysql://";
 	}
 
 	public TMSession() {
-		this.dbmsType = "MySQL";
-
-		this.header = TMDataHouse.getHeader(dbmsType);
+		
 		this.serverAddress = "localhost";
 		this.portNumber = 3306;
 		this.database = "";
@@ -58,7 +57,6 @@ public class TMSession {
 
 		TMSession session = (TMSession)gson.fromJson(stringBuffer.toString(), com.tm.orm.session.TMSession.class);
 
-		this.setDbmsType(session.getDbmsType());  //this will automatically set header
 		this.setServerAddress(session.getServerAddress());
 		this.setPortNumber(session.getPortNumber());
 		this.setDatabase(session.getDatabase());
@@ -69,10 +67,8 @@ public class TMSession {
 
 	}
 
-	public TMSession(String dbmsType, String serverAddress, int portNumber, String database, String username) {
-		this.dbmsType = dbmsType;
+	public TMSession(String serverAddress, int portNumber, String database, String username) {
 
-		this.header = TMDataHouse.getHeader(dbmsType);
 		this.serverAddress = this.serverAddress;
 		this.portNumber = portNumber;
 		this.database = database;
@@ -82,10 +78,8 @@ public class TMSession {
 		this.password = "";
 	}
 
-	public TMSession(String dbmsType, String serverAddress, int portNumber, String database, String username, String password) {
-		this.dbmsType = dbmsType;
+	public TMSession(String serverAddress, int portNumber, String database, String username, String password) {
 
-		this.header = TMDataHouse.getHeader(dbmsType);
 		this.serverAddress = this.serverAddress;
 		this.portNumber = portNumber;
 		this.database = database;
@@ -95,21 +89,18 @@ public class TMSession {
 		this.password = password;	
 	}
 
-	public String getQueryString() {
+	public String getConnectionString() {
 
 		String queryString = header + serverAddress + ":" + portNumber + '/' + database;
-		if(properties != "")
+		if(!properties.trim().isEmpty())
 			queryString += "?" + properties;
 
 		return queryString;  
 
     }
-	//Modifiers/Setters
-	public void setDbmsType(String dbmsType) {
-		this.dbmsType = dbmsType;
-		this.header = TMDataHouse.getHeader(dbmsType);
-	}
 
+	//Modifiers/Setters
+	
 	public void setServerAddress(String serverAddress) {
 		this.serverAddress = serverAddress;
 	}
@@ -136,8 +127,9 @@ public class TMSession {
 
 
 	//Getters
-	public String getDbmsType() {
-		return this.dbmsType;
+	
+	public String getDriverString() {
+		return this.driverString;
 	}
 
 	public String getServerAddress() {
@@ -213,7 +205,6 @@ public class TMSession {
 	public String toString() {
 		StringBuffer buffer = new StringBuffer();
 
-		buffer.append("Database MS : " + this.dbmsType + "\n\r");
 		buffer.append("Server      : " + this.serverAddress + "\n\r");
 		buffer.append("Port        : " + this.portNumber + "\n\r");
 		buffer.append("Database    : " + this.database + "\n\r");

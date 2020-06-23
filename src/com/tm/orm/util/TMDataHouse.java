@@ -6,11 +6,12 @@ import com.google.gson.*;
 
 public class TMDataHouse {
 
-	private static Map<String, String> headers = new HashMap<>();
+	private static Map<String, String> headers = new TreeMap<>();
 
 	private TMDataHouse(){}
 
 	public static void configureHeaders() {
+
 		Gson gson = new Gson();
 
 		File file = new File("c:/TMORM-Framework/conf/header.conf");
@@ -28,11 +29,12 @@ public class TMDataHouse {
 			return;
 		}
 
-		headers = (Map<String, String>)gson.fromJson(sb.toString(), java.util.Map.class);
+		headers = (Map<String, String>) gson.fromJson(sb.toString(), java.util.Map.class);
+
 	}
 
 	public static void addHeader(String dbms, String header) {
-		headers.put(dbms, header);
+    	headers.put(dbms, header);
 		updateHeaders();
 	}
 
@@ -59,8 +61,10 @@ public class TMDataHouse {
 
 	}
 
-	public static String getHeader(String header) {
-		return headers.get(header);
+	public static String getHeader(String key) {
+
+		return headers.get(key);
+		
 	}
 
 }
