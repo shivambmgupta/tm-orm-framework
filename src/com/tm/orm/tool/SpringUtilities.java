@@ -1,3 +1,5 @@
+package com.tm.orm.tool;
+
 import javax.swing.*;
 import javax.swing.SpringLayout;
 import java.awt.*;
