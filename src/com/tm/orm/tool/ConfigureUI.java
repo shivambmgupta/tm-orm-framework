@@ -1,3 +1,5 @@
+package com.tm.orm.tool;
+
 import java.io.*;
 import java.util.*;
 import javax.imageio.*;
@@ -72,8 +74,6 @@ public class ConfigureUI {
 
 	private static void addListeners() {
 
-		System.out.println("This must be working");
-
 		saveButton.addActionListener(new ActionListener() {
 
 			@Override
@@ -142,27 +142,6 @@ public class ConfigureUI {
 		for(int i = 0; i < n; ++i) mainPanel.add(new JPanel());
 	}
 
-	public static void setBounds() {
-
-		int titleW = 90;
-		int titleH = 20;
-		int formW = 478;
-		int formH = 200;
-		int buttonW = 478;
-		int buttonH = 36;
-
-		System.out.println("Frame: " + parent.getWidth()/2 + ", " + parent.getHeight());
-		System.out.println("title: " + TITLE_LABEL.getWidth()/2 + ", " + TITLE_LABEL.getHeight());
-		System.out.println("form: " + formPanel.getWidth()/2 + ", " + formPanel.getHeight());
-		System.out.println("button: " + buttonPanel.getWidth()/2 + ", " + buttonPanel.getHeight());
-		System.out.println("error: " + errorPanel.getWidth()/2 + ", " + errorPanel.getHeight());
-
-
-		TITLE_LABEL.setBounds(parent.getWidth()/2 - titleW/2, (int)(parent.getHeight() * 0.1), titleW, titleH);
-		formPanel.setBounds(parent.getWidth()/2 - formW/2, (int)(parent.getHeight() * 0.3), formW, formH);
-		buttonPanel.setBounds(parent.getWidth()/2 - buttonW/2, (int)(parent.getHeight() * 0.8), buttonW, buttonH);
-		error.setBounds(parent.getWidth()/2 - error.getWidth(), (int)(parent.getHeight() * 0.85), error.getWidth(), error.getHeight());
-	}
 
 	private static void styleComponents() {
 
@@ -197,7 +176,7 @@ public class ConfigureUI {
 
 		if(res.isEmpty()) {
 			parent.saveButtonClickedEvent();
-			error.setText("");
+			error.setText("Status: Okay");
 		}
 		else {
 			error.setText("Error: " + res);
@@ -286,6 +265,7 @@ public class ConfigureUI {
 			String path = System.getProperty("user.dir");
 			path = path.substring(0, path.length() - 19) + "conf" + File.separator + "session.txt";
 			session.save(path);
+			parent.setInfoContent(tables);
 		} catch(ORMException exception) {
 			return exception.getMessage();
 		}

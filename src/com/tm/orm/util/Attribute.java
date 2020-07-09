@@ -10,11 +10,11 @@ public class Attribute {
 	private String decimalDigits;
 	private boolean nullable;
 	private boolean autoIncrement;
-  private boolean primaryKey;
-  private boolean foreignKey;
-  private String foreignKeyRefTable;
-  private String foreignKeyRefCol;
-  private boolean uniqueKey;
+  	private boolean primaryKey;
+  	private boolean foreignKey;
+  	private String foreignKeyRefTable;
+  	private String foreignKeyRefCol;
+  	private boolean uniqueKey;
 
 
  	public void setName(String name) {

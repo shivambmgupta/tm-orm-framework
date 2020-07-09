@@ -1,3 +1,5 @@
+package com.tm.orm.tool;
+
 
 import java.io.*;
 import java.util.*;
@@ -6,6 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.event.*;
+import com.tm.orm.util.*;
 
 public class ORMTool extends JFrame {
 
@@ -52,12 +55,35 @@ public class ORMTool extends JFrame {
 		ConfigureUI.init(mainPanel, this); //Panel, Parents
 		
 		this.infoPanel = new JPanel();
+		ContentUI.init(infoPanel, this);
 
 		this.container.add(mainPanel);
 		this.container.add(infoPanel);
 
 		this.infoPanel.setVisible(false);
 		this.mainPanel.setVisible(true);
+	}
+
+	public void saveButtonClickedEvent() {
+		this.mainPanel.setVisible(false);
+		this.infoPanel.setVisible(true);
+	}
+
+	public void cancelButtonClickedEvent() {
+		this.dispose();
+	}
+
+	public int getHeight() {
+		return this.height;
+	}
+
+	public int getWidth() {
+		return this.width;
+	}
+
+	public void setInfoContent(Map<String, Table> content) {
+		ContentUI.setContent(content);
+		ContentUI.setUp();
 	}
 
 	private static void renderSplashScreen() throws Exception {
@@ -77,21 +103,6 @@ public class ORMTool extends JFrame {
 		} catch(Exception exception) {
 			exception.printStackTrace();
 		}
-	}
-
-	public void saveButtonClickedEvent() {
-		this.mainPanel.setVisible(false);
-		this.infoPanel.setVisible(true);
-	}
-	public void cancelButtonClickedEvent() {
-		this.dispose();
-	}
-
-	public int getHeight() {
-		return this.height;
-	}
-	public int getWidth() {
-		return this.width;
 	}
 
 }
