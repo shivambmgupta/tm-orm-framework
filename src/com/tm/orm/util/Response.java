@@ -1,5 +1,6 @@
 package com.tm.orm.util;
 
+@Deprecated
 public class Response {
 
 	private String res;
