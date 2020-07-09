@@ -8,20 +8,23 @@ import java.lang.reflect.*;
 import com.tm.orm.session.*;
 import com.tm.orm.util.*;
 import com.tm.orm.annotation.*;
+import com.tm.orm.exception.*;
+import com.tm.orm.validator.*;
 
+@Deprecated
 public class TMORMapper {
 
 	public static Map<String, Table> tables;
 	private static TMORMapper instance = null;
-	private static Connection connection = null;
+	private static Validate validate;
 
 	static {
 		tables = new HashMap<>();
 		TMSession database = null;
 		try {
 			database = new TMSession("C:/TMORM-Framework/conf/session.txt");
-			tables = new HashMap<>();
-			analyseDatabase(database);
+			tables = DBAnalyser.analyseDatabase(database);
+			validate = Validate.getInstance(tables);
 		} catch(Exception exception) {
 			exception.printStackTrace();
 		}
@@ -63,6 +66,15 @@ public class TMORMapper {
 					}
 				}
 			}
+
+			
+			try {
+				validate.forInsertion(object, table, map);
+			} catch(ORMException exception) {
+				System.err.printf("\n\tFollowing is exception occured\n\n");
+				System.out.println(exception.getMessage());
+				return;
+			} 
 
 		    PreparedStatement preparedStatement = prepareInsertStatement(object, table, map);
 		    preparedStatement.executeUpdate();
@@ -119,7 +131,7 @@ public class TMORMapper {
 
 			query = query.substring(0, query.length() - 4);
 
-			PreparedStatement ps = connection.prepareStatement(query);
+			PreparedStatement ps = ORMConnection.prepareStatement(query);
 			ps.executeUpdate();
 
 		} catch(Exception exception) {
@@ -128,82 +140,12 @@ public class TMORMapper {
 	}
 
 	public void commit() {
-		try {
-			connection.commit();
-		} catch(Exception exception) {
-			exception.printStackTrace();
-			try {
-				connection.rollback();
-			} catch(Exception e) {e.printStackTrace();}
-		}
+		ORMConnection.commit();
 	}
 
 	public void begin() {
-		try {
-		connection.setAutoCommit(false);
-		} catch(Exception exception) {
-			exception.printStackTrace();
-		}
+		ORMConnection.setAutoCommit(false);
 	}
-
-	private static void analyseDatabase(TMSession database) {
-
-		try {
-			Class.forName(database.getDriverString());
-			connection = DriverManager.getConnection(database.getConnectionString(), database.getUsername(), database.getPassword());
-
-			DatabaseMetaData databaseMetaData = connection.getMetaData();
-
-			ResultSet resultSet = databaseMetaData.getTables(null, null, null, new String[]{"TABLE"});
-
-			Table table;
-			Attribute attribute;
-
-			while(resultSet.next()) {	
-
-				table = new Table();
-				table.setName(resultSet.getString("TABLE_NAME"));
-    			table.setParentDB(database.getDatabase());
-
-    			ResultSet columns = databaseMetaData.getColumns(null,null, table.getName(), null);
-
-				while(columns.next()) {
-
-		 			attribute = new Attribute();
-		 			attribute.setName(columns.getString("COLUMN_NAME"));
-		 			attribute.setDatatype(columns.getString("TYPE_NAME"));
-		 			attribute.setSize(columns.getString("COLUMN_SIZE"));
-		 			attribute.setDecimalDigits(columns.getString("DECIMAL_DIGITS"));
-		 			boolean value = columns.getString("IS_NULLABLE").equalsIgnoreCase("No") ? false : true;
-		 			attribute.setIsNullable(value);
-		 			value = columns.getString("IS_AUTOINCREMENT").equalsIgnoreCase("No") ? false : true;
-		 			attribute.setIsAutoIncrement(value);
-
-		 			table.addAttribute(attribute);
-
-				}
-
-				ResultSet rsPk = databaseMetaData.getPrimaryKeys(null, null, table.getName());
-
-				while(rsPk.next())
-		 			table.addPrimaryKey(rsPk.getString("COLUMN_NAME"));
-				
-
-				ResultSet rsFk = databaseMetaData.getImportedKeys(null, null, table.getName());
-
-				while(rsFk.next())
-					table.addForeignKey(rsFk.getString("FKCOLUMN_NAME"));	
-				
-
-				tables.put(table.getName(), table);
-
-			}
-
-		} catch(Exception exception) {
-			exception.printStackTrace();
-		} 
-	}
-
 
 	private String getMappedColumn(Field field) {
 		com.tm.orm.annotation.MapColumn mCol = field.getAnnotation(com.tm.orm.annotation.MapColumn.class);
@@ -246,8 +188,12 @@ public class TMORMapper {
 		query = query.substring(0, query.length() - 1);
 		query += ")";
 
-		return connection.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
+		return ORMConnection.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
 
 	}
+
+	public Select select(Class<?> clazz) {
+ 		return new Select(clazz);
+ 	}
 
 }

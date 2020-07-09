@@ -1,0 +1,1 @@
+java  -classpath c:\TMORM-Framework\classes;c:\TMORM-Framework\lib\*;. -splash:./resources/splash/SGSplashScreen.png ORMTool

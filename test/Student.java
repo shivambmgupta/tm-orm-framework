@@ -136,17 +136,17 @@ public class Student {
 	@Override
 	public String toString() {
 		StringBuilder stringBuilder = new StringBuilder();
-		stringBuilder.append("rollNumber: " + rollNumber + System.getProperty("line.separator"));
-		stringBuilder.append("name: " + name + System.getProperty("line.separator"));
-		stringBuilder.append("gender: " + gender + System.getProperty("line.separator"));
-		stringBuilder.append("clazz: " + clazz + System.getProperty("line.separator"));
-		stringBuilder.append("pancard: " + pancard + System.getProperty("line.separator"));
-		stringBuilder.append("age: " + age + System.getProperty("line.separator"));
-		stringBuilder.append("courseID: " + courseID + System.getProperty("line.separator"));
-		stringBuilder.append("departmentID: " + departmentID + System.getProperty("line.separator"));
-		stringBuilder.append("percentage: " + percentage + System.getProperty("line.separator"));
-		stringBuilder.append("isIndian: " + isIndian + System.getProperty("line.separator"));
-		stringBuilder.append("dateOfBirth: " + dateOfBirth + System.getProperty("line.separator"));
+		stringBuilder.append("rollNumber: " + rollNumber + "    ");
+		stringBuilder.append("name: " + name + "    ");
+		stringBuilder.append("gender: " + gender + "    ");
+		stringBuilder.append("clazz: " + clazz + "    ");
+		stringBuilder.append("pancard: " + pancard + "    ");
+		stringBuilder.append("age: " + age + "    ");
+		stringBuilder.append("courseID: " + courseID + "    ");
+		stringBuilder.append("departmentID: " +departmentID+ "    ");
+		stringBuilder.append("percentage: " + percentage + "    ");
+		stringBuilder.append("isIndian: " + isIndian + "    ");
+		stringBuilder.append("dateOfBirth: " + dateOfBirth + ",           ");
 
 		return stringBuilder.toString();
 	}
